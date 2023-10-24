@@ -11,7 +11,6 @@ board = [
     "....##############....",
 ]
 
-
 def flood_fill(input_board: List[str], old: str, new: str, x: int, y: int) -> List[str]:
     """Returns board with old values replaced with new values
     through flood filling starting from the coordinates x, y
@@ -25,25 +24,29 @@ def flood_fill(input_board: List[str], old: str, new: str, x: int, y: int) -> Li
         List[str]: Modified board
     """
 
-def flood_fill(input_board: List[str], old: str, new: str, x: int, y: int) -> List[str]:
+    # Create a copy of the input board only once
+    board = input_board.copy()
+    _flood_fill_recursive(board, old, new, x, y)
+    return board
 
-    if x < 0 or x >= len(input_board) or y < 0 or y >= len(input_board[0]) or input_board[x][y] != old:
-        return input_board
+def _flood_fill_recursive(board: List[str], old: str, new: str, x: int, y: int) -> None:
+    """The recursive helper function."""
+    if x < 0 or x >= len(board) or y < 0 or y >= len(board[0]) or board[x][y] != old:
+        return
 
-    input_board[x] = input_board[x][:y] + new + input_board[x][y + 1:]
+    board[x] = board[x][:y] + new + board[x][y + 1:]
 
-    flood_fill(input_board, old, new, x + 1, y)  # D
-    flood_fill(input_board, old, new, x - 1, y)  # U
-    flood_fill(input_board, old, new, x, y + 1)  # R
-    flood_fill(input_board, old, new, x, y - 1)  # L
-
-    return input_board
+    _flood_fill_recursive(board, old, new, x + 1, y)  # D
+    _flood_fill_recursive(board, old, new, x - 1, y)  # U
+    _flood_fill_recursive(board, old, new, x, y + 1)  # R
+    _flood_fill_recursive(board, old, new, x, y - 1)  # L
 
 
 modified_board = flood_fill(input_board=board, old=".", new="~", x=5, y=12)
 
 for a in modified_board:
     print(a)
+print('\n')
 
 # Expected output:
 # ......................
@@ -54,3 +57,20 @@ for a in modified_board:
 # ....###~~~~~~~~~~~~#..
 # ....#~~~~~~~~~~~~###..
 # ....##############....
+
+
+# Add test case
+modified_board = flood_fill(input_board=board, old=".", new="~", x=1, y=2)
+
+for a in modified_board:
+    print(a)
+    
+# Expected output:
+# ~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~##########~~~~~~
+# ~~~~~~#........#~~~~~~
+# ~~~~~~#........#~~~~~~
+# ~~~~~~#........#####~~
+# ~~~~###............#~~
+# ~~~~#............###~~
+# ~~~~##############~~~~
